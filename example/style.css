@@ -1,0 +1,42 @@
+.hcontainer {
+    background-color: #F5F5F5;
+    border: 1px solid #ddd;
+    font-family: Arial;
+    height: 200px;
+}
+
+.vcontainer {
+    background-color: #F5F5F5;
+    border: 1px solid #ddd;
+    font-family: Arial;
+    height: 200px;
+}
+
+.left, .right, .middle {
+    line-height: 12;
+    min-width: 0px;
+    text-align: center;
+}
+
+.left {
+    flex: 0 250px;
+}
+
+.middle {
+    flex: 2;
+}
+
+.right {
+    flex: 0.7;
+}
+
+.top, .bottom {
+    border-bottom: 1px solid #DDD;
+    line-height: 2;
+    text-align: center;
+    width: 100%;
+}
+
+.left:hover, .right:hover, .top:hover, .bottom:hover, .middle:hover {
+    background-color: #eee;
+}

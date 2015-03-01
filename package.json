@@ -1,0 +1,27 @@
+{
+  "name": "drag-resizer",
+  "version": "0.0.0",
+  "description": "Resize dom nodes with a resize handle",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "example": "beefy example/browser.js --live -- -t babelify -t brfs"
+  },
+  "author": "vegetableman <vegetablebot@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "babelify": "^5.0.3",
+    "beefy": "^2.1.3",
+    "brfs": "^1.4.0",
+    "domready": "^1.0.7",
+    "hyperscript": "^1.4.4",
+    "insert-css": "^0.2.0"
+  },
+  "dependencies": {
+    "clickdrag": "^2.0.1",
+    "extend": "^2.0.0",
+    "is-array": "^1.0.1",
+    "lodash.without": "^3.0.0",
+    "queryselectorall": "^0.1.0"
+  }
+}

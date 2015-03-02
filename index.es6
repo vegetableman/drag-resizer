@@ -18,27 +18,21 @@ export default (() => {
         flexShrink: 0
     }
 
-    const dragHandleVertCSS = {
+    const dragHandleRowCSS = {
         backgroundImage: '-webkit-gradient(linear, 0 0, 100% 0, from(#E5E5E5), to(#D1D1D1));',
         borderLeft: '1px solid #FFF',
         borderRight: '1px solid #8E8E8E',
         cursor: 'ew-resize',
-        flexBasis: 'auto',
-        flexGrow: 0,
-        flexShrink: 0,
         position: 'relative',
         width: '3px',
         zIndex: 10
     }
 
-    const dragHandleHorCSS = {
+    const dragHandleColCSS = {
         backgroundImage: '-webkit-gradient(linear, 0 0, 0, 100%, from(#E5E5E5), to(#D1D1D1));',
         borderTop: '1px solid #FFF',
         borderBottom: '1px solid #8E8E8E',
         cursor: 'ns-resize',
-        flexBasis: 'auto',
-        flexGrow: 0,
-        flexShrink: 0,
         position: 'relative',
         height: '3px',
         zIndex: 10
@@ -87,24 +81,53 @@ export default (() => {
         css(elem, flexGrowCSS)
     }
 
+    function getContainerCSS(container, isRow) {
+        const prop = isRow ? 'width': 'height'
+        return {
+            display: 'flex',
+            flexDirection: isRow ? 'row': 'column',
+            [prop] : container.style[prop] ? container.style[prop]
+                                : getComputedStyle(container, [prop])
+        }
+    }
+
+    function getChildCSS(child, isRow) {
+        const flex = getComputedStyle(child, 'flex')
+        const defaultFlex = 1
+
+        return {
+            flexDirection: isRow ? 'column': 'row',
+            flex:  flex === '0 1 auto' ? defaultFlex : flex,
+            ['overflow' + (isRow ? 'X': 'Y')]: 'hidden'
+        }
+    }
+
+    function setCursor(isRow) {
+        document.body.style.cursor = isRow ? 'ew-resize' : 'ns-resize'
+    }
+
+    function setStyle(elem, prop, val){
+        elem.style[prop] = val
+    }
+
     // ---
 
-    function setDraggable(elem, next, siblings, isVertical) {
-        const prop = isVertical ? 'width': 'height'
-        const maxProp = isVertical ? 'maxWidth': 'maxHeight'
+    function setDraggable(elem, next, siblings, isRow) {
+        const prop = isRow ? 'width': 'height'
+        const maxProp = isRow ? 'maxWidth': 'maxHeight'
         const drag = clickDrag(elem)
 
         drag.on('start', (e) => {
             const prev = elem.previousSibling
-            const previousSize = parseInt(getComputedStyle(prev, prop), 10);
+            const previousSize = parseInt(getComputedStyle(prev, prop), 10)
             const nextSize = parseInt(getComputedStyle(next, prop), 10)
             const totalSize = nextSize + previousSize
 
             if (!next.style[maxProp] || parseInt(next.style[maxProp], 10) !== totalSize)
-                next.style[maxProp] = totalSize + 'px'
+                setStyle(next, maxProp, totalSize + 'px')
 
             if (!prev.style[maxProp] || parseInt(prev.style[maxProp], 10) !== totalSize)
-                prev.style[maxProp] = totalSize + 'px'
+                setStyle(prev, maxProp, totalSize + 'px')
 
             //Stunt all previous nodes but the immediate one
             stuntElement(without(siblings, prev), prop)
@@ -113,24 +136,24 @@ export default (() => {
             growElement(prev)
 
             //reset the next
-            next.style[prop] = nextSize + 'px'
+            setStyle(next, prop, nextSize + 'px')
 
             //and stunt it
             stuntElement(next)
 
-            //set cursor
-            document.body.style.cursor = isVertical ? 'ew-resize' : 'ns-resize'
+            //set cursor on document
+            setCursor(isRow)
 
-            elem.lastMousePos = isVertical ? e.clientX : e.clientY;
+            elem.lastMousePos = isRow ? e.clientX : e.clientY;
             e.preventDefault()
             return true
         });
 
         drag.on('move', (e) => {
-            const currMousePos = isVertical ? e.clientX : e.clientY
+            const currMousePos = isRow ? e.clientX : e.clientY
             const delta = elem.lastMousePos - currMousePos
             const nextSize = getSize(next, prop)
-            next.style[prop] = nextSize + delta + 'px'
+            setStyle(next, prop, nextSize + delta + 'px')
             elem.lastMousePos = currMousePos
             e.preventDefault()
             return true
@@ -142,27 +165,27 @@ export default (() => {
         });
     }
 
-    function createHandle(container, opts) {
-        const childNodes = [].slice.call(opts.childNodes || container.childNodes)
-        const type = opts.type || 'vertical'
-        const isVertical = type === 'vertical'
+    function createHandle(container, opts, isRow) {
+        const childNodes = [].slice.call(opts.childNodes || container.childNodes);
+        let dragHandle;
 
-        css(container, extend({
-            display: 'flex',
-            flexDirection: isVertical ? 'row': 'column'
-        }, flexGrowCSS));
+        if (opts.dragHandle) {
+            dragHandle = opts.dragHandle.elem
+            css(dragHandle, isRow ? opts.dragHandle.row : opts.dragHandle.column)
+        }
+        else {
+            dragHandle = createElement('div', 'drag-handle')
+            css(dragHandle, isRow ? dragHandleRowCSS : dragHandleColCSS)
+        }
+
+        css(container, extend(getContainerCSS(container, isRow), flexGrowCSS))
 
         childNodes.forEach((child, i) => {
-            css(child, extend({
-                flexDirection: isVertical ? 'column': 'row',
-                flex: getComputedStyle(child, 'flex') || 1
-            }))
+            css(child, extend(getChildCSS(child, isRow)))
 
             //No drag handle for first item
             if(i > 0) {
-                let dragHandle = createElement('div', 'drag-handle')
-                css(dragHandle, isVertical ? dragHandleVertCSS : dragHandleHorCSS)
-                setDraggable(dragHandle, child, childNodes, isVertical)
+                setDraggable(dragHandle, child, childNodes, isRow)
                 insertBefore(container, dragHandle, child)
             }
         });
@@ -172,8 +195,15 @@ export default (() => {
         if (!container)
             throw new Error('Please provider a container')
 
+        const type = opts.type || 'row'
+        const isRow = type === 'row'
+        if (opts.dragHandle) {
+            if (!opts.dragHandle.elem) throw new Error('Please provide a drag handle element.')
+            if (isRow && !opts.dragHandle.row) throw new Error('Please provide the drag handle css with row prop.')
+            if (!isRow && !opts.dragHandle.column) throw new Error('Please provide the drag handle css with column prop.')
+        }
         $(container).forEach(function(elem) {
-            createHandle(elem, opts)
+            createHandle(elem, opts, isRow)
         })
     };
 }())

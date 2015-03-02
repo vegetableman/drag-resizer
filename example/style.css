@@ -12,31 +12,22 @@
     height: 200px;
 }
 
-.left, .right, .middle {
+.left:hover, .right:hover, .top:hover, .bottom:hover, .middle:hover {
+    background-color: #eee;
+}
+
+.left, .right {
     line-height: 12;
-    min-width: 0px;
     text-align: center;
-}
-
-.left {
-    flex: 0 250px;
-}
-
-.middle {
-    flex: 2;
-}
-
-.right {
-    flex: 0.7;
 }
 
 .top, .bottom {
     border-bottom: 1px solid #DDD;
-    line-height: 2;
+    height: 50px;
     text-align: center;
     width: 100%;
 }
 
-.left:hover, .right:hover, .top:hover, .bottom:hover, .middle:hover {
-    background-color: #eee;
+.top {
+    flex: 2;
 }

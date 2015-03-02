@@ -10,7 +10,6 @@ insertCSS(style)
 domReady(() => {
     document.body.appendChild(h('div.hcontainer',
         h('div.left', 'Left'),
-        h('div.middle', 'Middle'),
         h('div.right', 'Right')
     ));
 
@@ -21,5 +20,5 @@ domReady(() => {
         h('div.bottom', 'Bottom')
     ));
 
-    dragResizer('.vcontainer', {type: 'horizontal'});
+    dragResizer('.vcontainer', {type: 'column'});
 })

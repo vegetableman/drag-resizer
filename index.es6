@@ -7,15 +7,15 @@ import clickDrag from 'clickdrag'
 export default (() => {
 
     const flexGrowCSS  = {
-        flexBasis: 'auto',
-        flexGrow: 1,
-        flexShrink: 1
+        [w('flexBasis')]: 'auto',
+        [w('flexGrow')]: 1,
+        [w('flexShrink')]: 1
     }
 
     const flexStuntCSS  = {
-        flexBasis: 'auto',
-        flexGrow: 0,
-        flexShrink: 0
+        [w('flexBasis')]: 'auto',
+        [w('flexGrow')]: 0,
+        [w('flexShrink')]: 0
     }
 
     const dragHandleRowCSS = {
@@ -84,20 +84,28 @@ export default (() => {
     function getContainerCSS(container, isRow) {
         const prop = isRow ? 'width': 'height'
         return {
-            display: 'flex',
-            flexDirection: isRow ? 'row': 'column',
+            display: (isWebkit() ? '-webkit-flex' :'flex'),
+            [w('flexDirection')]: isRow ? 'row': 'column',
             [prop] : container.style[prop] ? container.style[prop]
                                 : getComputedStyle(container, [prop])
         }
     }
 
+    function isWebkit() {
+        return typeof document.body.style['webkitFlex'] !== 'undefined'
+    }
+
+    function w(prop) {
+        return isWebkit() ? 'webkit' + (prop.charAt(0).toUpperCase() + prop.slice(1, prop.length)) : prop
+    }
+
     function getChildCSS(child, isRow) {
         const flex = getComputedStyle(child, 'flex')
-        const defaultFlex = 1
+        const defaultFlex = '1 1 0%'
 
         return {
-            flexDirection: isRow ? 'column': 'row',
-            flex:  flex === '0 1 auto' ? defaultFlex : flex,
+            [w('flex')]: !!flex && flex !== '0 1 auto' ? flex : defaultFlex,
+            [w('flexDirection')]: isRow ? 'column': 'row',
             ['overflow' + (isRow ? 'X': 'Y')]: 'hidden'
         }
     }

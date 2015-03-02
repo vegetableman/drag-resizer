@@ -110,8 +110,14 @@ export default (() => {
         }
     }
 
-    function setCursor(isRow) {
-        document.body.style.cursor = isRow ? 'ew-resize' : 'ns-resize'
+    function setCursor(cursor) {
+        document.body.style.cursor = cursor
+    }
+
+    function setSelect(val) {
+        var el = document.body
+        el.style.webkitUserSelect = val
+        el.style.MozUserSelect = val
     }
 
     function setStyle(elem, prop, val){
@@ -150,7 +156,9 @@ export default (() => {
             stuntElement(next)
 
             //set cursor on document
-            setCursor(isRow)
+            setCursor(isRow ? 'ew-resize' : 'ns-resize')
+
+            setSelect('none')
 
             elem.lastMousePos = isRow ? e.clientX : e.clientY;
             e.preventDefault()
@@ -169,7 +177,8 @@ export default (() => {
 
         drag.on('end', (e) => {
             e.preventDefault()
-            document.body.style.cursor = ''
+            setCursor('')
+            setSelect('')
         });
     }
 

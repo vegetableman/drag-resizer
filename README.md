@@ -1,6 +1,6 @@
 # drag-resizer
 
-Adds a drag handle for dom nodes, uses flexbox
+Adds a drag handle for dom nodes, uses flexbox.
 
 ![img](https://raw.githubusercontent.com/vegetableman/drag-resizer/master/example.gif)
 
@@ -8,6 +8,8 @@ Adds a drag handle for dom nodes, uses flexbox
   const dragResizer = require('drag-resizer')
   dragResizer('.container') // dragResizer(document.querySelector('.container'))
 ```
+
+Pass the container with the child nodes to be manipulated by the drag handle.
 
 ## Installation
 

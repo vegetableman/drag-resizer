@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify index.es6 -t babelify -o index.js",
     "example": "beefy example/browser.js --live -- -t babelify -t brfs"
   },
   "author": "vegetableman <vegetablebot@gmail.com>",
@@ -15,7 +16,8 @@
     "brfs": "^1.4.0",
     "domready": "^1.0.7",
     "hyperscript": "^1.4.4",
-    "insert-css": "^0.2.0"
+    "insert-css": "^0.2.0",
+    "browserify": "^3.30.1"
   },
   "dependencies": {
     "clickdrag": "^2.0.1",

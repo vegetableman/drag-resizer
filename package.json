@@ -1,6 +1,6 @@
 {
   "name": "drag-resizer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Adds a drag handle for dom nodes, based on flexbox",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,6 @@
     "domready": "^1.0.7",
     "hyperscript": "^1.4.4",
     "insert-css": "^0.2.0",
-    "pre-commit": "^1.0.5",
     "tape": "^3.5.0"
   },
   "dependencies": {
@@ -42,8 +41,5 @@
     "resize",
     "drag-handle",
     "drag-resizer"
-  ],
-  "pre-commit": [
-    "build"
   ]
 }

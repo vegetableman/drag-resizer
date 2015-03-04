@@ -189,7 +189,7 @@ module.exports = (function () {
         var isRow = type === "row";
 
         var dragHandle = createElement("div", "drag-handle");
-        dragHandle.classList.add(opts.className);
+        if (opts.className) dragHandle.classList.add(opts.className);
 
         css(container, extend(getContainerCSS(container, isRow), flexGrowCSS));
 

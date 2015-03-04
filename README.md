@@ -35,6 +35,6 @@ git clone https://github.com/vegetableman/drag-resizer.git
 cd drag-resizer
 npm install
 
-## now run the demo 
+## now run the demo
 npm run example
 ```

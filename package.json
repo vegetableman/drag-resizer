@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "browserify index.es6 -t babelify -o index.js",
     "example": "beefy example/browser.js --live -- -t babelify -t brfs",
-    "prepublish": "browserify index.es6 -t babelify -o index.js"
+    "prepublish": "browserify index.es6 -t babelify -o index.js",
+    "test": "tape test/*.js"
   },
   "author": "vegetableman <vegetablebot@gmail.com>",
   "license": "ISC",
@@ -24,7 +25,8 @@
     "domready": "^1.0.7",
     "hyperscript": "^1.4.4",
     "insert-css": "^0.2.0",
-    "pre-commit": "^1.0.5"
+    "pre-commit": "^1.0.5",
+    "tape": "^3.5.0"
   },
   "dependencies": {
     "clickdrag": "^2.0.1",
@@ -41,5 +43,7 @@
     "drag-handle",
     "drag-resizer"
   ],
-  "pre-commit": ["build"]
+  "pre-commit": [
+    "build"
+  ]
 }

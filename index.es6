@@ -162,7 +162,8 @@ export default (() => {
         const isRow = type === 'row'
 
         let dragHandle = createElement('div', 'drag-handle')
-        dragHandle.classList.add(opts.className)
+        if (opts.className)
+            dragHandle.classList.add(opts.className)
 
         css(container, extend(getContainerCSS(container, isRow), flexGrowCSS))
 

@@ -15,16 +15,18 @@ var extend = _interopRequire(require("extend"));
 
 var clickDrag = _interopRequire(require("clickdrag"));
 
+var prefix = _interopRequire(require("prefix"));
+
 module.exports = (function () {
 
     var flexGrowCSS = (function () {
         var _flexGrowCSS = {};
 
-        _defineProperty(_flexGrowCSS, w("flexBasis"), "auto");
+        _defineProperty(_flexGrowCSS, prefix("flexBasis"), "auto");
 
-        _defineProperty(_flexGrowCSS, w("flexGrow"), 1);
+        _defineProperty(_flexGrowCSS, prefix("flexGrow"), 1);
 
-        _defineProperty(_flexGrowCSS, w("flexShrink"), 1);
+        _defineProperty(_flexGrowCSS, prefix("flexShrink"), 1);
 
         return _flexGrowCSS;
     })();
@@ -32,34 +34,14 @@ module.exports = (function () {
     var flexStuntCSS = (function () {
         var _flexStuntCSS = {};
 
-        _defineProperty(_flexStuntCSS, w("flexBasis"), "auto");
+        _defineProperty(_flexStuntCSS, prefix("flexBasis"), "auto");
 
-        _defineProperty(_flexStuntCSS, w("flexGrow"), 0);
+        _defineProperty(_flexStuntCSS, prefix("flexGrow"), 0);
 
-        _defineProperty(_flexStuntCSS, w("flexShrink"), 0);
+        _defineProperty(_flexStuntCSS, prefix("flexShrink"), 0);
 
         return _flexStuntCSS;
     })();
-
-    var dragHandleRowCSS = {
-        backgroundImage: "-webkit-gradient(linear, 0 0, 100% 0, from(#E5E5E5), to(#D1D1D1));",
-        borderLeft: "1px solid #FFF",
-        borderRight: "1px solid #8E8E8E",
-        cursor: "ew-resize",
-        position: "relative",
-        width: "3px",
-        zIndex: 10
-    };
-
-    var dragHandleColCSS = {
-        backgroundImage: "-webkit-gradient(linear, 0 0, 0, 100%, from(#E5E5E5), to(#D1D1D1));",
-        borderTop: "1px solid #FFF",
-        borderBottom: "1px solid #8E8E8E",
-        cursor: "ns-resize",
-        position: "relative",
-        height: "3px",
-        zIndex: 10
-    };
 
     // ---
 
@@ -103,22 +85,14 @@ module.exports = (function () {
         var prop = isRow ? "width" : "height";
         return (function () {
             var _ref = {
-                display: isWebkit() ? "-webkit-flex" : "flex" };
+                display: prefix.dash("flex") };
 
-            _defineProperty(_ref, w("flexDirection"), isRow ? "row" : "column");
+            _defineProperty(_ref, prefix("flexDirection"), isRow ? "row" : "column");
 
             _defineProperty(_ref, prop, container.style[prop] ? container.style[prop] : getComputedStyle(container, [prop]));
 
             return _ref;
         })();
-    }
-
-    function isWebkit() {
-        return typeof document.body.style.webkitFlex !== "undefined";
-    }
-
-    function w(prop) {
-        return isWebkit() ? "webkit" + (prop.charAt(0).toUpperCase() + prop.slice(1, prop.length)) : prop;
     }
 
     function getChildCSS(child, isRow) {
@@ -128,9 +102,9 @@ module.exports = (function () {
         return (function () {
             var _ref = {};
 
-            _defineProperty(_ref, w("flex"), !!flex && flex !== "0 1 auto" ? flex : defaultFlex);
+            _defineProperty(_ref, prefix("flex"), !!flex && flex !== "0 1 auto" ? flex : defaultFlex);
 
-            _defineProperty(_ref, w("flexDirection"), isRow ? "column" : "row");
+            _defineProperty(_ref, prefix("flexDirection"), isRow ? "column" : "row");
 
             _defineProperty(_ref, "overflow" + (isRow ? "X" : "Y"), "hidden");
 
@@ -169,21 +143,22 @@ module.exports = (function () {
 
             if (!prev.style[maxProp] || parseInt(prev.style[maxProp], 10) !== totalSize) setStyle(prev, maxProp, totalSize + "px");
 
-            //Stunt all previous nodes but the immediate one
+            // Stunt all previous nodes but the immediate one
             stuntElement(without(siblings, prev), prop);
 
-            //Grow the previous node
+            // Grow the previous node
             growElement(prev);
 
-            //reset the next
+            // Reset the next
             setStyle(next, prop, nextSize + "px");
 
-            //and stunt it
+            // And stunt it
             stuntElement(next);
 
-            //set cursor on document
+            // Set cursor on document
             setCursor(isRow ? "ew-resize" : "ns-resize");
 
+            // Disable select
             setSelect("none");
 
             elem.lastMousePos = isRow ? e.clientX : e.clientY;
@@ -208,17 +183,13 @@ module.exports = (function () {
         });
     }
 
-    function createHandle(container, opts, isRow) {
+    function createHandle(container, opts) {
         var childNodes = [].slice.call(opts.childNodes || container.childNodes);
-        var dragHandle = undefined;
+        var type = opts.type || "row";
+        var isRow = type === "row";
 
-        if (opts.dragHandle) {
-            dragHandle = opts.dragHandle.elem;
-            css(dragHandle, isRow ? opts.dragHandle.row : opts.dragHandle.column);
-        } else {
-            dragHandle = createElement("div", "drag-handle");
-            css(dragHandle, isRow ? dragHandleRowCSS : dragHandleColCSS);
-        }
+        var dragHandle = createElement("div", "drag-handle");
+        dragHandle.classList.add(opts.className);
 
         css(container, extend(getContainerCSS(container, isRow), flexGrowCSS));
 
@@ -238,20 +209,13 @@ module.exports = (function () {
 
         if (!container) throw new Error("Please provider a container");
 
-        var type = opts.type || "row";
-        var isRow = type === "row";
-        if (opts.dragHandle) {
-            if (!opts.dragHandle.elem) throw new Error("Please provide a drag handle element.");
-            if (isRow && !opts.dragHandle.row) throw new Error("Please provide the drag handle css with row prop.");
-            if (!isRow && !opts.dragHandle.column) throw new Error("Please provide the drag handle css with column prop.");
-        }
         $(container).forEach(function (elem) {
-            createHandle(elem, opts, isRow);
+            createHandle(elem, opts);
         });
     };
 })();
 
-},{"clickdrag":2,"extend":10,"is-array":11,"lodash.without":12,"queryselectorall":19}],2:[function(require,module,exports){
+},{"clickdrag":2,"extend":10,"is-array":11,"lodash.without":12,"prefix":19,"queryselectorall":20}],2:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 var events = require('dom-events')
@@ -380,7 +344,7 @@ function up(clientType, ev) {
 }
 
 module.exports = ClickDrag
-},{"dom-events":3,"events":21,"inherits":7,"mouse-event-offset":8,"xtend":9}],3:[function(require,module,exports){
+},{"dom-events":3,"events":22,"inherits":7,"mouse-event-offset":8,"xtend":9}],3:[function(require,module,exports){
 
 var synth = require('synthetic-dom-events');
 
@@ -1353,6 +1317,79 @@ function baseSlice(array, start, end) {
 module.exports = baseSlice;
 
 },{}],19:[function(require,module,exports){
+
+var style = document.createElement('p').style
+var prefixes = 'O ms Moz webkit'.split(' ')
+var upper = /([A-Z])/g
+
+var memo = {}
+
+/**
+ * memoized `prefix`
+ *
+ * @param {String} key
+ * @return {String}
+ * @api public
+ */
+
+module.exports = exports = function(key){
+  return key in memo
+    ? memo[key]
+    : memo[key] = prefix(key)
+}
+
+exports.prefix = prefix
+exports.dash = dashedPrefix
+
+/**
+ * prefix `key`
+ *
+ *   prefix('transform') // => webkitTransform
+ *
+ * @param {String} key
+ * @return {String}
+ * @api public
+ */
+
+function prefix(key){
+  // camel case
+  key = key.replace(/-([a-z])/g, function(_, char){
+    return char.toUpperCase()
+  })
+
+  // without prefix
+  if (style[key] !== undefined) return key
+
+  // with prefix
+  var Key = capitalize(key)
+  var i = prefixes.length
+  while (i--) {
+    var name = prefixes[i] + Key
+    if (style[name] !== undefined) return name
+  }
+
+  throw new Error('unable to prefix ' + key)
+}
+
+function capitalize(str){
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+/**
+ * create a dasherized prefix
+ *
+ * @param {String} key
+ * @return {String}
+ * @api public
+ */
+
+function dashedPrefix(key){
+  key = prefix(key)
+  if (upper.test(key)) key = '-' + key.replace(upper, '-$1')
+  return key.toLowerCase()
+}
+
+},{}],20:[function(require,module,exports){
 var isDom = require('is-dom');
 
 function querySelectorAll(selector) {
@@ -1362,7 +1399,7 @@ function querySelectorAll(selector) {
 
 module.exports = querySelectorAll;
 
-},{"is-dom":20}],20:[function(require,module,exports){
+},{"is-dom":21}],21:[function(require,module,exports){
 /*global window*/
 
 /**
@@ -1379,7 +1416,7 @@ module.exports = function isNode(val){
   return 'number' == typeof val.nodeType && 'string' == typeof val.nodeName;
 }
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a

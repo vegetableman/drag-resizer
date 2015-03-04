@@ -1,12 +1,13 @@
 {
   "name": "drag-resizer",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Adds a drag handle for dom nodes, based on flexbox",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "browserify index.es6 -t babelify -o index.js",
-    "example": "beefy example/browser.js --live -- -t babelify -t brfs"
+    "example": "beefy example/browser.js --live -- -t babelify -t brfs",
+    "prepublish": "browserify index.es6 -t babelify -o index.js"
   },
   "author": "vegetableman <vegetablebot@gmail.com>",
   "license": "ISC",

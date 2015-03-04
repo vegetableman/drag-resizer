@@ -1,6 +1,6 @@
 {
   "name": "drag-resizer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Adds a drag handle for dom nodes, based on flexbox",
   "main": "index.js",
   "scripts": {

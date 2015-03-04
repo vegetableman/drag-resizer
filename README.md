@@ -24,7 +24,7 @@ Creates a new dragResizer for an element with the given options.
 
 - `type` - The type of flexbox (row|column), default type row.
 - `childNodes` - Array of child nodes manipulated by the handle, default immediate child nodes of the element.
-- 'className' - Class name for the drag handle.
+- `className` - Class name for the drag handle.
 
 ## demo
 

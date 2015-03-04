@@ -13,12 +13,16 @@ domReady(() => {
         h('div.right', 'Right')
     ));
 
-    dragResizer('.hcontainer');
+    dragResizer('.hcontainer', {
+        className: 'drag-handle-row'
+    });
 
     document.body.appendChild(h('div.vcontainer',
         h('div.top', 'Top'),
         h('div.bottom', 'Bottom')
     ));
 
-    dragResizer('.vcontainer', {type: 'column'});
+    dragResizer('.vcontainer', {
+                type: 'column',
+                className: 'drag-handle-col'});
 })

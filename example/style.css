@@ -27,3 +27,23 @@
     text-align: center;
     width: 100%;
 }
+
+.drag-handle-row {
+    background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#E5E5E5), to(#D1D1D1));
+    border-left: 1px solid #FFF;
+    border-right: 1px solid #8E8E8E;
+    cursor: ew-resize;
+    position: relative;
+    width: 3px;
+    z-index: 10;
+}
+
+.drag-handle-col {
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#E5E5E5), to(#D1D1D1));
+    border-top: 1px solid #FFF;
+    border-bottom: 1px solid #8E8E8E;
+    cursor: ns-resize;
+    position: relative;
+    height: 3px;
+    z-index: 10;
+}

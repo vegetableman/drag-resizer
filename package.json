@@ -1,6 +1,6 @@
 {
   "name": "drag-resizer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Adds a drag handle for dom nodes, based on flexbox",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,11 @@
   },
   "author": "vegetableman <vegetablebot@gmail.com>",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vegetableman/drag-resizer.git"
+  },
+  "homepage": "https://github.com/vegetableman/drag-resizer",
   "devDependencies": {
     "babelify": "^5.0.3",
     "beefy": "^2.1.3",
@@ -24,6 +29,13 @@
     "extend": "^2.0.0",
     "is-array": "^1.0.1",
     "lodash.without": "^3.0.0",
+    "prefix": "^0.2.1",
     "queryselectorall": "^0.1.0"
-  }
+  },
+  "keywords": [
+    "drag",
+    "flexbox",
+    "resize",
+    "drag-handle"
+  ]
 }

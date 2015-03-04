@@ -3,39 +3,20 @@ import isArray from 'is-array'
 import without from 'lodash.without'
 import extend from 'extend'
 import clickDrag from 'clickdrag'
+import prefix from 'prefix'
 
 export default (() => {
 
     const flexGrowCSS  = {
-        [w('flexBasis')]: 'auto',
-        [w('flexGrow')]: 1,
-        [w('flexShrink')]: 1
+        [prefix('flexBasis')]: 'auto',
+        [prefix('flexGrow')]: 1,
+        [prefix('flexShrink')]: 1
     }
 
     const flexStuntCSS  = {
-        [w('flexBasis')]: 'auto',
-        [w('flexGrow')]: 0,
-        [w('flexShrink')]: 0
-    }
-
-    const dragHandleRowCSS = {
-        backgroundImage: '-webkit-gradient(linear, 0 0, 100% 0, from(#E5E5E5), to(#D1D1D1));',
-        borderLeft: '1px solid #FFF',
-        borderRight: '1px solid #8E8E8E',
-        cursor: 'ew-resize',
-        position: 'relative',
-        width: '3px',
-        zIndex: 10
-    }
-
-    const dragHandleColCSS = {
-        backgroundImage: '-webkit-gradient(linear, 0 0, 0, 100%, from(#E5E5E5), to(#D1D1D1));',
-        borderTop: '1px solid #FFF',
-        borderBottom: '1px solid #8E8E8E',
-        cursor: 'ns-resize',
-        position: 'relative',
-        height: '3px',
-        zIndex: 10
+        [prefix('flexBasis')]: 'auto',
+        [prefix('flexGrow')]: 0,
+        [prefix('flexShrink')]: 0
     }
 
     // ---
@@ -84,19 +65,11 @@ export default (() => {
     function getContainerCSS(container, isRow) {
         const prop = isRow ? 'width': 'height'
         return {
-            display: (isWebkit() ? '-webkit-flex' :'flex'),
-            [w('flexDirection')]: isRow ? 'row': 'column',
+            display: prefix.dash('flex'),
+            [prefix('flexDirection')]: isRow ? 'row': 'column',
             [prop] : container.style[prop] ? container.style[prop]
                                 : getComputedStyle(container, [prop])
         }
-    }
-
-    function isWebkit() {
-        return typeof document.body.style['webkitFlex'] !== 'undefined'
-    }
-
-    function w(prop) {
-        return isWebkit() ? 'webkit' + (prop.charAt(0).toUpperCase() + prop.slice(1, prop.length)) : prop
     }
 
     function getChildCSS(child, isRow) {
@@ -104,8 +77,8 @@ export default (() => {
         const defaultFlex = '1 1 0%'
 
         return {
-            [w('flex')]: !!flex && flex !== '0 1 auto' ? flex : defaultFlex,
-            [w('flexDirection')]: isRow ? 'column': 'row',
+            [prefix('flex')]: !!flex && flex !== '0 1 auto' ? flex : defaultFlex,
+            [prefix('flexDirection')]: isRow ? 'column': 'row',
             ['overflow' + (isRow ? 'X': 'Y')]: 'hidden'
         }
     }
@@ -143,21 +116,22 @@ export default (() => {
             if (!prev.style[maxProp] || parseInt(prev.style[maxProp], 10) !== totalSize)
                 setStyle(prev, maxProp, totalSize + 'px')
 
-            //Stunt all previous nodes but the immediate one
+            // Stunt all previous nodes but the immediate one
             stuntElement(without(siblings, prev), prop)
 
-            //Grow the previous node
+            // Grow the previous node
             growElement(prev)
 
-            //reset the next
+            // Reset the next
             setStyle(next, prop, nextSize + 'px')
 
-            //and stunt it
+            // And stunt it
             stuntElement(next)
 
-            //set cursor on document
+            // Set cursor on document
             setCursor(isRow ? 'ew-resize' : 'ns-resize')
 
+            // Disable select
             setSelect('none')
 
             elem.lastMousePos = isRow ? e.clientX : e.clientY;
@@ -182,18 +156,13 @@ export default (() => {
         });
     }
 
-    function createHandle(container, opts, isRow) {
+    function createHandle(container, opts) {
         const childNodes = [].slice.call(opts.childNodes || container.childNodes);
-        let dragHandle;
+        const type = opts.type || 'row'
+        const isRow = type === 'row'
 
-        if (opts.dragHandle) {
-            dragHandle = opts.dragHandle.elem
-            css(dragHandle, isRow ? opts.dragHandle.row : opts.dragHandle.column)
-        }
-        else {
-            dragHandle = createElement('div', 'drag-handle')
-            css(dragHandle, isRow ? dragHandleRowCSS : dragHandleColCSS)
-        }
+        let dragHandle = createElement('div', 'drag-handle')
+        dragHandle.classList.add(opts.className)
 
         css(container, extend(getContainerCSS(container, isRow), flexGrowCSS))
 
@@ -212,15 +181,8 @@ export default (() => {
         if (!container)
             throw new Error('Please provider a container')
 
-        const type = opts.type || 'row'
-        const isRow = type === 'row'
-        if (opts.dragHandle) {
-            if (!opts.dragHandle.elem) throw new Error('Please provide a drag handle element.')
-            if (isRow && !opts.dragHandle.row) throw new Error('Please provide the drag handle css with row prop.')
-            if (!isRow && !opts.dragHandle.column) throw new Error('Please provide the drag handle css with column prop.')
-        }
         $(container).forEach(function(elem) {
-            createHandle(elem, opts, isRow)
+            createHandle(elem, opts)
         })
     };
 }())
